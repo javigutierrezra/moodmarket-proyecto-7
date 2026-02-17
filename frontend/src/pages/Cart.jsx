@@ -1,48 +1,40 @@
 import { useContext } from "react"
 import { CartContext } from "../context/CartContext"
-import { Link } from "react-router-dom"
 
 function Cart() {
-  const { cart, dispatch } = useContext(CartContext)
+  const { cart, removeFromCart, clearCart } = useContext(CartContext)
 
-  // Calcular total
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  const total = cart.reduce((sum, item) => sum + item.price, 0)
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <h2 className="text-3xl font-bold mb-8">Tu Carrito</h2>
+    <div className="min-h-screen p-8 bg-gray-50">
+      <h2 className="text-3xl font-bold mb-6">Tu Carrito</h2>
 
       {cart.length === 0 ? (
-        <p className="text-gray-500">
-          Tu carrito está vacío. <Link to="/" className="text-blue-500 underline">Volver al catálogo</Link>
-        </p>
+        <p className="text-gray-500">No hay productos en el carrito.</p>
       ) : (
-        <div className="grid gap-6">
+        <div className="space-y-4">
           {cart.map(item => (
-            <div
-              key={item._id}
-              className="bg-white rounded-xl shadow-md p-5 flex justify-between items-center"
-            >
-              <div className="flex items-center gap-4">
-                <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded-lg" />
-                <div>
-                  <h3 className="text-xl font-semibold">{item.name}</h3>
-                  <p className="text-gray-500">${item.price}</p>
-                  <p className="text-gray-500">Cantidad: {item.quantity}</p>
-                </div>
+            <div key={item._id} className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
+              <div>
+                <h3 className="font-semibold">{item.name}</h3>
+                <p className="text-gray-500">${item.price}</p>
               </div>
               <button
-                onClick={() => dispatch({ type: "REMOVE_FROM_CART", payload: item._id })}
-                className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition"
+                onClick={() => removeFromCart(item._id)}
+                className="text-red-500 hover:underline"
               >
                 Eliminar
               </button>
             </div>
           ))}
-
-          <div className="text-right mt-4">
-            <p className="text-2xl font-bold">Total: ${total}</p>
-          </div>
+          <p className="text-xl font-bold mt-4">Total: ${total}</p>
+          <button
+            onClick={clearCart}
+            className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 mt-4"
+          >
+            Vaciar Carrito
+          </button>
         </div>
       )}
     </div>
