@@ -1,10 +1,12 @@
-import { useContext } from "react"
-import { CartContext } from "../context/CartContext"
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
 function Cart() {
-  const { cart, removeFromCart, clearCart } = useContext(CartContext)
+  const { cart, removeFromCart, clearCart } = useContext(CartContext);
 
-  const total = cart.reduce((sum, item) => sum + item.price, 0)
+  console.log("Carrito actual:", cart); // 🔹 revisar en consola
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
 
   return (
     <div className="min-h-screen p-8 bg-gray-50">
@@ -15,13 +17,16 @@ function Cart() {
       ) : (
         <div className="space-y-4">
           {cart.map(item => (
-            <div key={item._id} className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
+            <div
+              key={item._id.toString()} // 🔹 aseguramos string
+              className="flex justify-between items-center bg-white p-4 rounded-lg shadow"
+            >
               <div>
                 <h3 className="font-semibold">{item.name}</h3>
                 <p className="text-gray-500">${item.price}</p>
               </div>
               <button
-                onClick={() => removeFromCart(item._id)}
+                onClick={() => removeFromCart(item._id.toString())}
                 className="text-red-500 hover:underline"
               >
                 Eliminar
@@ -38,7 +43,7 @@ function Cart() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default Cart
+export default Cart;
